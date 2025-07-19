@@ -1,0 +1,5 @@
+{
+  "database-url": "postgresql://localhost:5432/ndne_v2",
+  "migrations-dir": "migrations",
+  "migrations-table": "pgmigrations"
+}

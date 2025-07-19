@@ -1,42 +1,175 @@
-# NDNE V2 Prototype
+# NDNE V2 Platform
 
-An outcome-oriented collective intelligence platform that enables AI-mediated solution discovery without ideological gridlock.
+A revolutionary collective intelligence platform that enables outcome-oriented deliberation through AI-mediated solution discovery.
 
-## 🎯 Core Concept
+## Current Status
 
-Instead of forcing people to take fixed positions on complex issues, NDNE V2 focuses on what people actually want: better outcomes. Users express desired outcomes ("I want a world where...") and AI agents collaborate to discover novel solutions that satisfy multiple stakeholders.
+✅ **Foundation & Authentication Complete** - Project structure, database schema, and full authentication system are implemented and ready. Next: implementing Home Mind conversation interface.
 
-## 🚀 Key Features
+## Project Structure
 
-- **Dual-Persona AI System**: Personal "Home Mind" that learns your values + standardized "Business Suit" for public forums
-- **Outcome-Oriented**: Focus on desired outcomes rather than fixed positions
-- **AI-Powered Discovery**: Intelligent matching and proposal generation
-- **Privacy-First**: Your conversations stay private while outcomes are anonymized
-- **Accessible**: Free tier with platform API + enhanced features with your own API key
+```
+/
+├── backend/                 # Node.js/Express API
+│   ├── src/
+│   │   ├── config/         # Database configuration
+│   │   ├── middleware/     # Authentication middleware
+│   │   ├── routes/         # API route handlers
+│   │   ├── services/       # Business logic (AuthService)
+│   │   └── index.ts        # Main server with security middleware
+│   ├── migrations/         # Database schema migrations
+│   │   └── 1640995200000_create-initial-schema.js
+│   └── package.json        # Dependencies and scripts
+├── frontend/               # React application with Vite
+│   ├── src/
+│   │   ├── components/     # UI components (planned)
+│   │   ├── pages/          # HomePage with API status check
+│   │   ├── services/       # API client (planned)
+│   │   ├── types/          # TypeScript interfaces (planned)
+│   │   └── App.tsx         # Main app with routing
+│   └── package.json        # React dependencies
+└── .kiro/                  # Kiro specifications and steering
+    └── specs/ndne-v2-platform/  # Requirements, design, tasks
+```
 
-## 📚 Documentation
+## Quick Start
 
-- [Whitepaper](NDNE-V2-Whitepaper.md) - Full vision and concept
-- [Requirements](.kiro/specs/ndne-v2-platform/requirements.md) - User stories and acceptance criteria
-- [Design](.kiro/specs/ndne-v2-platform/design.md) - Technical architecture
-- [Tasks](.kiro/specs/ndne-v2-platform/tasks.md) - Implementation roadmap
+### Prerequisites
+- Node.js 18+ 
+- PostgreSQL 12+
+- npm or yarn
 
-## 🛠️ Tech Stack
+### Backend Setup
 
-- **Frontend**: React with TypeScript
-- **Backend**: Node.js/Express with TypeScript
-- **Database**: PostgreSQL
-- **AI**: OpenRouter API integration
-- **Auth**: JWT tokens
+1. Navigate to backend directory:
+```bash
+cd backend
+```
 
-## 🏗️ Project Status
+2. Install dependencies:
+```bash
+npm install
+```
 
-Currently in documentation phase. Ready to begin prototype development.
+3. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your database URL and other settings
+```
 
-## 📄 License
+4. Set up PostgreSQL database:
+```bash
+createdb ndne_v2
+```
 
-TBD - This is a prototype project
+5. Run database migrations:
+```bash
+npm run migrate:up
+```
 
----
+6. Start development server:
+```bash
+npm run dev
+```
 
-*Built with the vision of enabling human flourishing through better collective decision-making.*
+The backend will run on http://localhost:3000
+
+### Frontend Setup
+
+1. Navigate to frontend directory:
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start development server:
+```bash
+npm start
+```
+
+The frontend will run on http://localhost:3001
+
+## Development
+
+### Database Migrations
+
+Create a new migration:
+```bash
+cd backend
+npm run migrate:create -- migration-name
+```
+
+Run migrations:
+```bash
+npm run migrate:up
+```
+
+Rollback migrations:
+```bash
+npm run migrate:down
+```
+
+### Testing
+
+Backend tests:
+```bash
+cd backend
+npm test
+```
+
+## Environment Variables
+
+See `backend/.env.example` for required environment variables:
+
+- `DATABASE_URL`: PostgreSQL connection string
+- `JWT_SECRET`: Secret key for JWT tokens
+- `OPENROUTER_API_KEY`: API key for AI services
+- `PORT`: Server port (default: 3000)
+- `CORS_ORIGIN`: Frontend URL for CORS (default: http://localhost:3001)
+
+## API Endpoints
+
+### Health Check
+- `GET /health` - System health status
+- `GET /api/health` - API service health status
+
+### Authentication
+- `POST /api/auth/register` - User registration with email/password
+- `POST /api/auth/login` - User login with JWT token response
+- `GET /api/auth/me` - Get current user profile (requires auth)
+- `POST /api/auth/validate` - Validate JWT token
+
+### Coming Soon
+- Conversation endpoints for Home Mind AI
+- Outcome collection and management
+- AI-powered proposal generation
+- User reaction and feedback system
+
+## Technology Stack
+
+### Backend
+- Node.js with Express
+- TypeScript
+- PostgreSQL with UUID primary keys
+- JWT authentication
+- OpenRouter API integration
+
+### Frontend  
+- React with TypeScript
+- React Router for navigation
+- Axios for API calls
+- Responsive CSS design
+
+## Next Steps
+
+With foundation and authentication complete, the next development phases are:
+
+1. **Home Mind Conversation Interface** - AI-powered chat system for outcome discovery
+2. **Outcome Collection System** - Forms and storage for user desired outcomes
+3. **AI-Powered Proposal Generation** - System to match outcomes and generate solutions
+4. **User Reaction System** - Feedback collection and learning from user responses
+5. **Dashboard and Navigation** - User interface for managing outcomes and viewing proposals

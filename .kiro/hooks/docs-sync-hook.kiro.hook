@@ -20,6 +20,6 @@
   },
   "then": {
     "type": "askAgent",
-    "prompt": "Source files have been modified. Please review the changes and update the project documentation accordingly. Focus on:\n\n1. Update the README.md with any new features, API changes, or setup instructions\n2. If there's a /docs folder, update relevant documentation files there\n3. Ensure documentation reflects current project structure, dependencies, and functionality\n4. Update any code examples or usage instructions that may have changed\n5. Keep documentation clear, accurate, and helpful for new developers\n\nPlease analyze the changed files and determine what documentation updates are needed to keep everything in sync."
+    "prompt": "Source files have been modified. Please review the changes and update the project documentation accordingly. Focus on:\n\n1. Read all the core documents first, including the ndne-v2-platform spec. Then update the README.md with any new features, API changes, or setup instructions\n2. If there's a /docs folder, update relevant documentation files there\n3. Ensure documentation reflects current project structure, dependencies, and functionality\n4. Update any code examples or usage instructions that may have changed\n5. Keep documentation clear, accurate, and helpful for new developers\n\nPlease analyze the changed files and determine what documentation updates are needed to keep everything in sync."
   }
 }

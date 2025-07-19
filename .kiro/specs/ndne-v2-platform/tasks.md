@@ -7,18 +7,19 @@
   - Configure basic project structure and dependencies
   - _Requirements: 7.4, 7.5_
 
-- [ ] 2. Implement basic authentication system
+- [x] 2. Implement basic authentication system
   - Create user registration and login endpoints
   - Implement JWT token generation and validation
   - Add password hashing with bcrypt
   - Create protected route middleware
   - _Requirements: 7.1, 7.4_
 
-- [ ] 3. Build Home Mind conversation interface
+- [x] 3. Build Home Mind conversation interface
   - Create conversation API endpoints (POST /api/conversations, GET /api/conversations/:userId)
   - Implement OpenRouter API integration for chat functionality
   - Build simple chat UI component in React
   - Store conversation history in database
+  - Add authentication and login/register UI components
   - _Requirements: 1.1, 1.2, 1.5_
 
 - [ ] 4. Implement outcome collection and distillation system

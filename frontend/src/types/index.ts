@@ -44,8 +44,12 @@ export interface ChatMessage {
 
 // API Response types
 export interface ApiResponse<T> {
-  data: T;
+  data?: T;
   message?: string;
+  user?: any;
+  token?: string;
+  conversation?: any;
+  conversations?: any[];
 }
 
 export interface ApiError {

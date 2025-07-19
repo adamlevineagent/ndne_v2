@@ -4,7 +4,10 @@ A revolutionary collective intelligence platform that enables outcome-oriented d
 
 ## Current Status
 
-✅ **Foundation & Authentication Complete** - Project structure, database schema, and full authentication system are implemented and ready. Next: implementing Home Mind conversation interface.
+✅ **Foundation Complete** - Project structure, database schema, and development environment setup  
+✅ **Authentication System Complete** - Full user registration, login, JWT tokens, and protected routes  
+✅ **Home Mind Conversation Interface Complete** - AI-powered chat system with OpenRouter integration  
+🚧 **Next: Outcome Collection System** - Forms and storage for user desired outcomes
 
 ## Project Structure
 
@@ -22,10 +25,10 @@ A revolutionary collective intelligence platform that enables outcome-oriented d
 │   └── package.json        # Dependencies and scripts
 ├── frontend/               # React application with Vite
 │   ├── src/
-│   │   ├── components/     # UI components (planned)
-│   │   ├── pages/          # HomePage with API status check
-│   │   ├── services/       # API client (planned)
-│   │   ├── types/          # TypeScript interfaces (planned)
+│   │   ├── components/     # UI components (AuthForm, Chat)
+│   │   ├── pages/          # HomePage with authentication and chat
+│   │   ├── services/       # API client with auth and conversation services
+│   │   ├── types/          # TypeScript interfaces
 │   │   └── App.tsx         # Main app with routing
 │   └── package.json        # React dependencies
 └── .kiro/                  # Kiro specifications and steering
@@ -137,17 +140,65 @@ See `backend/.env.example` for required environment variables:
 - `GET /health` - System health status
 - `GET /api/health` - API service health status
 
-### Authentication
-- `POST /api/auth/register` - User registration with email/password
+### Authentication ✅ Complete
+- `POST /api/auth/register` - User registration with email/password validation
+  - Requires: `{ email, password }` (password min 8 chars)
+  - Returns: `{ user, token }` with JWT token (7-day expiry)
 - `POST /api/auth/login` - User login with JWT token response
-- `GET /api/auth/me` - Get current user profile (requires auth)
+  - Requires: `{ email, password }`
+  - Returns: `{ user, token }` with authentication token
+- `GET /api/auth/me` - Get current user profile (requires Bearer token)
+  - Headers: `Authorization: Bearer <token>`
+  - Returns: `{ user: { id, email, createdAt } }`
 - `POST /api/auth/validate` - Validate JWT token
+  - Headers: `Authorization: Bearer <token>`
+  - Returns: `{ valid: true, user }`
+
+### Conversations ✅ Complete
+- `GET /api/conversations` - Get all conversations for authenticated user
+  - Headers: `Authorization: Bearer <token>`
+  - Returns: `{ conversations: [{ id, messages, createdAt }] }`
+- `GET /api/conversations/:id` - Get specific conversation by ID
+  - Headers: `Authorization: Bearer <token>`
+  - Returns: `{ conversation: { id, messages, createdAt } }`
+- `POST /api/conversations` - Create new conversation with Home Mind AI
+  - Headers: `Authorization: Bearer <token>`
+  - Requires: `{ message: string }` (max 2000 chars)
+  - Returns: `{ conversation: { id, messages, createdAt } }`
+- `POST /api/conversations/:id/messages` - Add message to existing conversation
+  - Headers: `Authorization: Bearer <token>`
+  - Requires: `{ message: string }` (max 2000 chars)
+  - Returns: `{ conversation: { id, messages, createdAt } }`
+- `DELETE /api/conversations/:id` - Delete conversation
+  - Headers: `Authorization: Bearer <token>`
+  - Returns: `{ message: "Conversation deleted successfully" }`
 
 ### Coming Soon
-- Conversation endpoints for Home Mind AI
 - Outcome collection and management
 - AI-powered proposal generation
 - User reaction and feedback system
+
+## Authentication & Security
+
+The platform implements a robust authentication system with the following features:
+
+### Security Features ✅ Implemented
+- **Password Security**: bcrypt hashing with configurable rounds (default: 12)
+- **JWT Tokens**: 7-day expiry with secure secret key validation
+- **Input Validation**: Email format validation and password strength requirements
+- **Rate Limiting**: 100 requests per 15-minute window per IP
+- **CORS Protection**: Configurable origin restrictions
+- **Security Headers**: Helmet.js for standard security headers
+- **Error Handling**: Secure error messages that don't leak sensitive information
+
+### Authentication Flow
+1. **Registration**: User provides email/password → System validates → Password hashed → User created → JWT token returned
+2. **Login**: User provides credentials → System validates → Password verified → JWT token returned
+3. **Protected Routes**: Client sends Bearer token → Server validates → Request processed or rejected
+
+### Middleware
+- `authenticateToken`: Requires valid JWT token, rejects unauthorized requests
+- `optionalAuth`: Accepts requests with or without tokens (for future features)
 
 ## Technology Stack
 
@@ -155,8 +206,9 @@ See `backend/.env.example` for required environment variables:
 - Node.js with Express
 - TypeScript
 - PostgreSQL with UUID primary keys
-- JWT authentication
-- OpenRouter API integration
+- JWT authentication with bcrypt
+- OpenRouter API integration with Claude 3 Haiku
+- Security: Helmet, CORS, Rate Limiting
 
 ### Frontend  
 - React with TypeScript
@@ -166,10 +218,10 @@ See `backend/.env.example` for required environment variables:
 
 ## Next Steps
 
-With foundation and authentication complete, the next development phases are:
+With foundation, authentication, and Home Mind conversation interface complete, the next development phases are:
 
-1. **Home Mind Conversation Interface** - AI-powered chat system for outcome discovery
-2. **Outcome Collection System** - Forms and storage for user desired outcomes
-3. **AI-Powered Proposal Generation** - System to match outcomes and generate solutions
-4. **User Reaction System** - Feedback collection and learning from user responses
-5. **Dashboard and Navigation** - User interface for managing outcomes and viewing proposals
+1. **Outcome Collection System** - Forms and storage for user desired outcomes with importance ratings
+2. **AI-Powered Proposal Generation** - System to match outcomes and generate solutions that address multiple users' needs
+3. **User Reaction System** - Feedback collection and learning from user responses to proposals
+4. **Dashboard and Navigation** - User interface for managing outcomes and viewing proposals
+5. **Enhanced AI Features** - API key management for users who want unlimited AI capabilities

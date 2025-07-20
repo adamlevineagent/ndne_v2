@@ -93,17 +93,17 @@ export const conversationService = {
 
 // Outcome service
 export const outcomeService = {
-  getOutcomes: async (userId: string): Promise<ApiResponse<{ outcomes: any[] }>> => {
+  getOutcomes: async (userId: string): Promise<{ outcomes: any[] }> => {
     const response = await api.get(`/outcomes/${userId}`);
     return response.data;
   },
 
-  createOutcome: async (statement: string, importance: number): Promise<ApiResponse<{ outcome: any }>> => {
+  createOutcome: async (statement: string, importance: number): Promise<{ outcome: any }> => {
     const response = await api.post('/outcomes', { statement, importance });
     return response.data;
   },
 
-  updateOutcome: async (id: string, updates: { statement?: string; importance?: number }): Promise<ApiResponse<{ outcome: any }>> => {
+  updateOutcome: async (id: string, updates: { statement?: string; importance?: number }): Promise<{ outcome: any }> => {
     const response = await api.put(`/outcomes/${id}`, updates);
     return response.data;
   },
@@ -113,12 +113,12 @@ export const outcomeService = {
     return response.data;
   },
 
-  extractOutcomes: async (conversationMessages: any[]): Promise<ApiResponse<{ outcomes: any[] }>> => {
+  extractOutcomes: async (conversationMessages: any[]): Promise<{ outcomes: any[] }> => {
     const response = await api.post('/outcomes/extract', { conversationMessages });
     return response.data;
   },
 
-  refineOutcome: async (id: string): Promise<ApiResponse<{ outcome: any }>> => {
+  refineOutcome: async (id: string): Promise<{ outcome: any }> => {
     const response = await api.post(`/outcomes/${id}/refine`);
     return response.data;
   },
@@ -143,6 +143,11 @@ export const proposalService = {
   }): Promise<{ proposals: any[] }> => {
     const response = await api.post('/proposals/generate', options || {});
     return response.data.data; // Backend returns { success: true, data: { proposals: [...] } }
+  },
+
+  getProposalConnections: async (proposalId: string, userId: string): Promise<{ connections: any }> => {
+    const response = await api.get(`/proposals/${proposalId}/connections/${userId}`);
+    return response.data.data; // Backend returns { success: true, data: { connections: {...} } }
   },
 };
 

@@ -7,13 +7,17 @@ interface ProposalListProps {
   isLoading?: boolean;
   onViewDetails?: (proposal: Proposal) => void;
   onGenerateProposals?: () => void;
+  currentUserId?: string;
+  showConnections?: boolean;
 }
 
 const ProposalList: React.FC<ProposalListProps> = ({ 
   proposals, 
   isLoading = false, 
   onViewDetails,
-  onGenerateProposals 
+  onGenerateProposals,
+  currentUserId,
+  showConnections = true
 }) => {
   if (isLoading) {
     return (
@@ -65,6 +69,8 @@ const ProposalList: React.FC<ProposalListProps> = ({
             key={proposal.id}
             proposal={proposal}
             onViewDetails={onViewDetails}
+            currentUserId={currentUserId}
+            showConnections={showConnections}
           />
         ))}
       </div>

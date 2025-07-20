@@ -133,6 +133,8 @@ const ProposalsPage: React.FC = () => {
           isLoading={isLoading}
           onViewDetails={handleViewDetails}
           onGenerateProposals={handleGenerateProposals}
+          currentUserId={userId}
+          showConnections={true}
         />
       </div>
 

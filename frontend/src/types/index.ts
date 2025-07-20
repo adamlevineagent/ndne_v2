@@ -31,6 +31,24 @@ export interface Proposal {
   createdAt: Date;
 }
 
+export interface ProposalOutcomeConnections {
+  proposalId: string;
+  userId: string;
+  userOutcomes: UserOutcomeConnection[];
+  benefitExplanation: string;
+  overallRelevanceScore: number;
+  sharedThemes: string[];
+}
+
+export interface UserOutcomeConnection {
+  outcomeId: string;
+  statement: string;
+  importance: number;
+  connectionStrength: number;
+  howProposalHelps: string;
+  sharedThemes: string[];
+}
+
 export interface Reaction {
   id: string;
   userId: string;

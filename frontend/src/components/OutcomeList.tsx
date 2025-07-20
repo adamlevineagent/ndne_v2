@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { outcomeService } from '../services/api';
 import { Outcome } from '../types';
 
 interface OutcomeListProps {
-  userId: string;
   outcomes: Outcome[];
   onOutcomesChange: (outcomes: Outcome[]) => void;
 }
 
-const OutcomeList: React.FC<OutcomeListProps> = ({ userId, outcomes, onOutcomesChange }) => {
+const OutcomeList: React.FC<OutcomeListProps> = ({ outcomes, onOutcomesChange }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editStatement, setEditStatement] = useState('');
   const [editImportance, setEditImportance] = useState(3);

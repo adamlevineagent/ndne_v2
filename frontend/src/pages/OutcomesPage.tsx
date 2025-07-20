@@ -157,7 +157,6 @@ const OutcomesPage: React.FC = () => {
           <div className="loading">Loading your outcomes...</div>
         ) : (
           <OutcomeList
-            userId={userId}
             outcomes={outcomes}
             onOutcomesChange={handleOutcomesChange}
           />

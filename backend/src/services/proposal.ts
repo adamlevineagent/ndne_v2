@@ -26,6 +26,24 @@ export interface OutcomeMatch {
   sharedThemes: string[];
 }
 
+export interface ProposalOutcomeConnections {
+  proposalId: string;
+  userId: string;
+  userOutcomes: UserOutcomeConnection[];
+  benefitExplanation: string;
+  overallRelevanceScore: number;
+  sharedThemes: string[];
+}
+
+export interface UserOutcomeConnection {
+  outcomeId: string;
+  statement: string;
+  importance: number;
+  connectionStrength: number;
+  howProposalHelps: string;
+  sharedThemes: string[];
+}
+
 export interface GenerateProposalRequest {
   minSimilarityScore?: number;
   maxUsers?: number;
@@ -119,6 +137,55 @@ export class ProposalService {
       return null;
     }
     return this.mapRowToProposal(result.rows[0]);
+  }
+
+  /**
+   * Get how a specific proposal connects to a user's outcomes
+   */
+  async getProposalOutcomeConnections(proposalId: string, userId: string): Promise<ProposalOutcomeConnections | null> {
+    try {
+      // Get the proposal
+      const proposal = await this.getProposalById(proposalId);
+      if (!proposal) {
+        return null;
+      }
+
+      // Get user's outcomes
+      const userOutcomesQuery = `
+        SELECT id, statement, importance, created_at
+        FROM outcomes
+        WHERE user_id = $1
+        ORDER BY importance DESC, created_at DESC
+      `;
+      const userOutcomesResult = await this.db.query(userOutcomesQuery, [userId]);
+      const userOutcomes = userOutcomesResult.rows;
+
+      if (userOutcomes.length === 0) {
+        return {
+          proposalId,
+          userId,
+          userOutcomes: [],
+          benefitExplanation: "You haven't created any outcomes yet. Create some outcomes to see how proposals might benefit you.",
+          overallRelevanceScore: 0,
+          sharedThemes: []
+        };
+      }
+
+      // Analyze connections between proposal and user outcomes using AI
+      const connections = await this.analyzeProposalOutcomeConnections(proposal, userOutcomes);
+
+      return {
+        proposalId,
+        userId,
+        userOutcomes: connections.userOutcomes,
+        benefitExplanation: connections.benefitExplanation,
+        overallRelevanceScore: connections.overallRelevanceScore,
+        sharedThemes: connections.sharedThemes
+      };
+    } catch (error) {
+      console.error('Error getting proposal outcome connections:', error);
+      return null;
+    }
   }
 
   /**
@@ -409,6 +476,139 @@ Overall similarity score: ${group.overallSimilarityScore.toFixed(2)}`
       throw error;
     } finally {
       client.release();
+    }
+  }
+
+  /**
+   * Analyze how a proposal connects to a user's specific outcomes using AI
+   */
+  private async analyzeProposalOutcomeConnections(proposal: Proposal, userOutcomes: any[]): Promise<{
+    userOutcomes: UserOutcomeConnection[];
+    benefitExplanation: string;
+    overallRelevanceScore: number;
+    sharedThemes: string[];
+  }> {
+    try {
+      const analysisPrompt: ChatMessage = {
+        role: 'system',
+        content: `Analyze how a specific proposal connects to a user's desired outcomes.
+
+For each user outcome, determine:
+1. Connection strength (0.0-1.0) - how well the proposal addresses this outcome
+2. How the proposal helps achieve this outcome (specific explanation)
+3. Shared themes between the proposal and outcome
+
+Return ONLY a valid JSON object (no markdown formatting) with:
+{
+  "userOutcomes": [
+    {
+      "outcomeId": "outcome-id",
+      "statement": "outcome statement",
+      "importance": 1-5,
+      "connectionStrength": 0.0-1.0,
+      "howProposalHelps": "specific explanation of how proposal addresses this outcome",
+      "sharedThemes": ["theme1", "theme2"]
+    }
+  ],
+  "benefitExplanation": "Overall explanation of how this proposal benefits the user (100-200 words)",
+  "overallRelevanceScore": 0.0-1.0,
+  "sharedThemes": ["theme1", "theme2"]
+}
+
+Guidelines:
+- Connection strength 0.8+ = directly addresses the outcome
+- Connection strength 0.5-0.8 = significantly helps with the outcome  
+- Connection strength 0.2-0.5 = somewhat related or indirectly helpful
+- Connection strength <0.2 = minimal or no connection
+- Focus on practical benefits and real-world impact
+- Be specific about HOW the proposal helps achieve each outcome`
+      };
+
+      const outcomesText = userOutcomes
+        .map(outcome => `ID: ${outcome.id}, Statement: "${outcome.statement}", Importance: ${outcome.importance}/5`)
+        .join('\n');
+
+      const userMessage: ChatMessage = {
+        role: 'user',
+        content: `Proposal Title: "${proposal.title}"
+Proposal Description: "${proposal.description}"
+
+User's Desired Outcomes:
+${outcomesText}
+
+Analyze how this proposal connects to each of the user's outcomes.`
+      };
+
+      const response = await AIService.chat([analysisPrompt, userMessage]);
+      
+      try {
+        // Clean the response by removing markdown code blocks if present
+        let cleanedResponse = response.message.trim();
+        if (cleanedResponse.startsWith('```json')) {
+          cleanedResponse = cleanedResponse.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+        } else if (cleanedResponse.startsWith('```')) {
+          cleanedResponse = cleanedResponse.replace(/^```\s*/, '').replace(/\s*```$/, '');
+        }
+        
+        const analysis = JSON.parse(cleanedResponse);
+        
+        // Validate and sanitize the response
+        const userOutcomeConnections: UserOutcomeConnection[] = [];
+        if (Array.isArray(analysis.userOutcomes)) {
+          for (const connection of analysis.userOutcomes) {
+            userOutcomeConnections.push({
+              outcomeId: connection.outcomeId || '',
+              statement: connection.statement || '',
+              importance: Math.max(1, Math.min(5, connection.importance || 3)),
+              connectionStrength: Math.max(0, Math.min(1, connection.connectionStrength || 0)),
+              howProposalHelps: connection.howProposalHelps || 'No specific connection identified.',
+              sharedThemes: Array.isArray(connection.sharedThemes) ? connection.sharedThemes : []
+            });
+          }
+        }
+
+        return {
+          userOutcomes: userOutcomeConnections,
+          benefitExplanation: analysis.benefitExplanation || 'This proposal may provide general benefits.',
+          overallRelevanceScore: Math.max(0, Math.min(1, analysis.overallRelevanceScore || 0)),
+          sharedThemes: Array.isArray(analysis.sharedThemes) ? analysis.sharedThemes : []
+        };
+      } catch (parseError: any) {
+        console.error('Error parsing proposal connection analysis:', parseError.message);
+        console.error('Raw response:', response.message);
+        
+        // Return a fallback response
+        return {
+          userOutcomes: userOutcomes.map(outcome => ({
+            outcomeId: outcome.id,
+            statement: outcome.statement,
+            importance: outcome.importance,
+            connectionStrength: 0.1,
+            howProposalHelps: 'Unable to analyze connection at this time.',
+            sharedThemes: []
+          })),
+          benefitExplanation: 'Unable to analyze how this proposal benefits you at this time. Please try again later.',
+          overallRelevanceScore: 0.1,
+          sharedThemes: []
+        };
+      }
+    } catch (error) {
+      console.error('Error analyzing proposal outcome connections:', error);
+      
+      // Return a fallback response
+      return {
+        userOutcomes: userOutcomes.map(outcome => ({
+          outcomeId: outcome.id,
+          statement: outcome.statement,
+          importance: outcome.importance,
+          connectionStrength: 0.1,
+          howProposalHelps: 'Unable to analyze connection at this time.',
+          sharedThemes: []
+        })),
+        benefitExplanation: 'Unable to analyze how this proposal benefits you at this time. Please try again later.',
+        overallRelevanceScore: 0.1,
+        sharedThemes: []
+      };
     }
   }
 

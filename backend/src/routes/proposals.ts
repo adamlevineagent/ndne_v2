@@ -90,4 +90,43 @@ router.get('/:id', authenticateToken, async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * GET /api/proposals/:id/connections/:userId
+ * Get how a specific proposal connects to a user's outcomes
+ */
+router.get('/:id/connections/:userId', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const { id: proposalId, userId } = req.params;
+    const requestingUserId = (req as any).user.userId;
+
+    // Users can only access their own outcome connections
+    if (userId !== requestingUserId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied'
+      });
+    }
+
+    const connections = await proposalService.getProposalOutcomeConnections(proposalId, userId);
+
+    if (!connections) {
+      return res.status(404).json({
+        success: false,
+        error: 'Proposal not found or no connections available'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: { connections }
+    });
+  } catch (error: any) {
+    console.error('Error fetching proposal connections:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to fetch proposal connections'
+    });
+  }
+});
+
 export default router;

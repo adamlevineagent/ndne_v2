@@ -63,7 +63,7 @@
   - Include responsive design for mobile compatibility
   - _Requirements: 5.2, 5.3_
 
-- [ ] 6.4 Show outcome-proposal connections
+- [x] 6.4 Show outcome-proposal connections
   - Display how each proposal addresses user's specific outcomes
   - Show similarity analysis and shared themes in proposal view
   - Highlight which of user's outcomes are addressed by each proposal

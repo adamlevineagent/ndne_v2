@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { reactionService, CreateReactionData } from '../services/reaction';
+import { reactionService } from '../services';
+import { CreateReactionData } from '../services/reaction';
 import { authenticateToken } from '../middleware/auth';
 
 const router = Router();

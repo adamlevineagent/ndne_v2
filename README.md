@@ -9,14 +9,13 @@ A revolutionary collective intelligence platform that enables outcome-oriented d
 ✅ **Home Mind Conversation Interface Complete** - AI-powered chat system with OpenRouter integration  
 ✅ **Outcome Collection System Complete** - Full CRUD operations, AI extraction, and refinement capabilities  
 ✅ **AI-Powered Proposal Generation Complete** - Semantic similarity analysis and intelligent proposal synthesis  
-✅ **Reaction System Complete** - Full backend API with comprehensive reaction management and statistics  
 ✅ **Proposal Viewing Interface Complete** - Frontend components for viewing and managing proposals  
-✅ **Proposal Reaction Interface Complete** - Full reaction capture UI with like/dislike buttons, comments, and statistics  
+✅ **Reaction Capture System Complete** - Full reaction interface with like/dislike buttons, comments, statistics, and user state management  
 🔄 **Next: Outcome-Proposal Connections** - Show how proposals address user's specific outcomes and similarity analysis
 
 > **📋 For detailed status information, see [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md)**
 
-The platform now supports the complete user journey from registration through conversation, outcome collection, proposal generation, and reaction capture. All core systems are functional and tested.
+The platform now supports the complete user journey from registration through conversation, outcome collection, proposal generation, and reaction capture. All core systems are functional and tested with comprehensive verification tools.
 
 ## Project Structure
 
@@ -26,20 +25,30 @@ The platform now supports the complete user journey from registration through co
 │   ├── src/
 │   │   ├── config/         # Database configuration
 │   │   ├── middleware/     # Authentication middleware
-│   │   ├── routes/         # API route handlers
-│   │   ├── services/       # Business logic (AuthService)
+│   │   ├── routes/         # API route handlers (auth, conversations, outcomes, proposals, reactions)
+│   │   ├── services/       # Business logic (auth, AI, conversation, outcome, proposal, reaction)
+│   │   ├── tests/          # Unit tests for services
 │   │   └── index.ts        # Main server with security middleware
 │   ├── migrations/         # Database schema migrations
+│   │   ├── 001_initial_schema.sql
+│   │   ├── 002_create_outcomes_table.sql
 │   │   └── 1640995200000_create-initial-schema.js
+│   ├── test-*.js           # Integration and debugging test scripts
 │   └── package.json        # Dependencies and scripts
 ├── frontend/               # React application with Vite
 │   ├── src/
-│   │   ├── components/     # UI components (AuthForm, Chat)
-│   │   ├── pages/          # HomePage with authentication and chat
-│   │   ├── services/       # API client with auth and conversation services
+│   │   ├── components/     # UI components (AuthForm, Chat, ProposalCard, ProposalList, OutcomeForm, OutcomeList)
+│   │   ├── pages/          # Page components (HomePage, OutcomesPage, ProposalsPage)
+│   │   ├── services/       # API client services (auth, conversation, outcome, proposal, reaction)
 │   │   ├── types/          # TypeScript interfaces
-│   │   └── App.tsx         # Main app with routing
+│   │   └── App.tsx         # Main app with routing and navigation
 │   └── package.json        # React dependencies
+├── scripts/                # Build and verification scripts
+│   ├── setup.sh           # Environment setup script
+│   ├── verify-implementation.js  # Task verification tool
+│   └── test-reaction-frontend.js # Frontend testing script
+├── docs/                   # Documentation
+│   └── CURRENT_STATUS.md   # Detailed implementation status
 └── .kiro/                  # Kiro specifications and steering
     └── specs/ndne-v2-platform/  # Requirements, design, tasks
 ```
@@ -155,6 +164,9 @@ node debug-proposal-generation.js
 
 # Test proposal API endpoints
 node test-proposal-api.js
+
+# Test proposal generation end-to-end
+node test-proposal-generation.js
 ```
 
 #### Reaction System Testing
@@ -171,6 +183,20 @@ node test-reaction-api.js
 node scripts/test-reaction-frontend.js
 ```
 
+#### Authentication and Core Services Testing
+```bash
+cd backend
+
+# Test authentication endpoints
+node test-auth-endpoints.js
+
+# Test AI service integration
+node test-ai-service.js
+
+# Test outcome management
+node test-outcomes.js
+```
+
 #### Unit Testing
 ```bash
 cd backend
@@ -181,16 +207,21 @@ npm test
 # Run specific test suites
 npm test -- --testNamePattern="ReactionService"
 npm test -- --testNamePattern="AuthService"
+npm test -- --testNamePattern="ConversationService"
+
+# Run tests with coverage
+npm test -- --coverage
 ```
 
 These tools help diagnose issues with:
-- AI-powered outcome similarity analysis
-- Proposal generation algorithms
-- Reaction capture and statistics
-- Database operations and data integrity
-- OpenRouter API integration
-- Frontend-backend integration
-- User authentication and authorization
+- AI-powered outcome similarity analysis and semantic matching
+- Proposal generation algorithms and coalition building
+- Reaction capture, statistics, and user state management
+- Database operations and data integrity validation
+- OpenRouter API integration and error handling
+- Frontend-backend integration and API communication
+- User authentication, authorization, and session management
+- Conversation flow and AI response processing
 
 ## Environment Variables
 
@@ -200,7 +231,11 @@ See `backend/.env.example` for required environment variables:
 - `JWT_SECRET`: Secret key for JWT tokens
 - `OPENROUTER_API_KEY`: API key for AI services
 - `PORT`: Server port (default: 3000)
+- `NODE_ENV`: Environment mode (development/production)
 - `CORS_ORIGIN`: Frontend URL for CORS (default: http://localhost:3001)
+- `BCRYPT_ROUNDS`: Password hashing rounds (default: 12)
+- `RATE_LIMIT_WINDOW_MS`: Rate limiting window in milliseconds (default: 900000)
+- `RATE_LIMIT_MAX_REQUESTS`: Max requests per window (default: 100)
 
 ## API Endpoints
 

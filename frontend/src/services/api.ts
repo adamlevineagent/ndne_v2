@@ -179,4 +179,37 @@ export const reactionService = {
   },
 };
 
+// Learning service
+export const learningService = {
+  analyzePatterns: async (): Promise<{ insights: any[] }> => {
+    const response = await api.post('/learning/analyze-patterns');
+    return response.data;
+  },
+
+  evolveOutcomes: async (): Promise<{ evolutions: any[] }> => {
+    const response = await api.post('/learning/evolve-outcomes');
+    return response.data;
+  },
+
+  getValueProfile: async (): Promise<{ profile: any }> => {
+    const response = await api.get('/learning/value-profile');
+    return response.data;
+  },
+
+  getCollectivePatterns: async (): Promise<{ patterns: any[] }> => {
+    const response = await api.get('/learning/collective-patterns');
+    return response.data;
+  },
+
+  triggerLearning: async (): Promise<{ results: any }> => {
+    const response = await api.post('/learning/trigger-learning');
+    return response.data;
+  },
+
+  getInsights: async (): Promise<{ insights: any[] }> => {
+    const response = await api.get('/learning/insights');
+    return response.data;
+  },
+};
+
 export default api;

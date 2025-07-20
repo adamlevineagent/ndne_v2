@@ -19,9 +19,17 @@ export interface CreateReactionData {
 
 export class ReactionService {
   private db: Pool;
+  private learningService?: any; // Will be injected to avoid circular dependency
 
   constructor() {
     this.db = pool;
+  }
+
+  /**
+   * Set learning service for reaction-based learning (injected to avoid circular dependency)
+   */
+  setLearningService(learningService: any): void {
+    this.learningService = learningService;
   }
 
   /**
@@ -42,7 +50,16 @@ export class ReactionService {
     `;
 
     const result = await this.db.query(query, [userId, proposalId, response, comment]);
-    return result.rows[0];
+    const reaction = result.rows[0];
+
+    // Trigger learning analysis asynchronously (don't wait for it to complete)
+    if (this.learningService && reaction) {
+      this.learningService.processNewReaction(userId, reaction.id).catch((error: any) => {
+        console.error('Error processing reaction for learning:', error);
+      });
+    }
+
+    return reaction;
   }
 
   /**

@@ -91,4 +91,37 @@ export const conversationService = {
   },
 };
 
+// Outcome service
+export const outcomeService = {
+  getOutcomes: async (userId: string): Promise<ApiResponse<{ outcomes: any[] }>> => {
+    const response = await api.get(`/outcomes/${userId}`);
+    return response.data;
+  },
+
+  createOutcome: async (statement: string, importance: number): Promise<ApiResponse<{ outcome: any }>> => {
+    const response = await api.post('/outcomes', { statement, importance });
+    return response.data;
+  },
+
+  updateOutcome: async (id: string, updates: { statement?: string; importance?: number }): Promise<ApiResponse<{ outcome: any }>> => {
+    const response = await api.put(`/outcomes/${id}`, updates);
+    return response.data;
+  },
+
+  deleteOutcome: async (id: string): Promise<ApiResponse<{ message: string }>> => {
+    const response = await api.delete(`/outcomes/${id}`);
+    return response.data;
+  },
+
+  extractOutcomes: async (conversationMessages: any[]): Promise<ApiResponse<{ outcomes: any[] }>> => {
+    const response = await api.post('/outcomes/extract', { conversationMessages });
+    return response.data;
+  },
+
+  refineOutcome: async (id: string): Promise<ApiResponse<{ outcome: any }>> => {
+    const response = await api.post(`/outcomes/${id}/refine`);
+    return response.data;
+  },
+};
+
 export default api;

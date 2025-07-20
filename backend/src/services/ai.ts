@@ -17,6 +17,11 @@ export interface ChatResponse {
   };
 }
 
+export interface ExtractedOutcome {
+  statement: string;
+  importance: number;
+}
+
 export class AIService {
   /**
    * Send a chat message to OpenRouter API
@@ -50,7 +55,7 @@ Remember: You're learning what the user wants the world to look like, not debati
       const response = await axios.post(
         OPENROUTER_API_URL,
         {
-          model: 'anthropic/claude-3-haiku',
+          model: 'moonshotai/kimi-k2',
           messages: fullMessages,
           max_tokens: 1000,
           temperature: 0.7
@@ -62,7 +67,7 @@ Remember: You're learning what the user wants the world to look like, not debati
             'HTTP-Referer': process.env.CORS_ORIGIN || 'http://localhost:3001',
             'X-Title': 'NDNE V2 Platform'
           },
-          timeout: 30000 // 30 second timeout
+          timeout: 180000 // 3 minute timeout for kimi-k2
         }
       );
 
@@ -92,21 +97,36 @@ Remember: You're learning what the user wants the world to look like, not debati
   }
 
   /**
-   * Extract outcomes from conversation history
+   * Extract outcomes from conversation text
    */
-  static async extractOutcomes(messages: ChatMessage[]): Promise<string[]> {
+  async extractOutcomes(conversationText: string): Promise<ExtractedOutcome[]> {
     try {
       const extractionPrompt: ChatMessage = {
         role: 'system',
-        content: `Analyze this conversation and extract any desired outcomes the user has expressed. 
+        content: `Analyze this conversation text and extract any desired outcomes the user has expressed. 
 Look for statements about what they want to see in the world, their values, and their vision for the future.
-Return a JSON array of outcome statements. Each should be a clear "I want a world where..." statement.
-If no clear outcomes are found, return an empty array.
 
-Example format: ["I want a world where everyone has access to quality education", "I want a world where communities are more connected"]`
+Return a JSON array of objects with this format:
+{
+  "statement": "I want a world where...",
+  "importance": 1-5 (estimate based on how strongly they expressed it)
+}
+
+Guidelines:
+- Convert statements to "I want a world where..." format
+- Rate importance 1-5 based on emotional intensity and emphasis
+- Only extract clear, actionable desired outcomes
+- If no clear outcomes are found, return an empty array
+
+Example: [{"statement": "I want a world where everyone has access to quality education", "importance": 4}]`
       };
 
-      const response = await this.chat([extractionPrompt, ...messages]);
+      const userMessage: ChatMessage = {
+        role: 'user',
+        content: conversationText
+      };
+
+      const response = await AIService.chat([extractionPrompt, userMessage]);
       
       try {
         const outcomes = JSON.parse(response.message);
@@ -118,6 +138,38 @@ Example format: ["I want a world where everyone has access to quality education"
     } catch (error) {
       console.error('Outcome extraction error:', error);
       return [];
+    }
+  }
+
+  /**
+   * Refine an outcome statement for clarity and specificity
+   */
+  async refineOutcome(outcomeStatement: string): Promise<string> {
+    try {
+      const refinementPrompt: ChatMessage = {
+        role: 'system',
+        content: `You are helping refine outcome statements to be clearer and more specific while preserving the original intent.
+
+Guidelines:
+- Keep the "I want a world where..." format
+- Make it more specific and actionable if vague
+- Improve clarity without changing the core meaning
+- If the statement is already clear and specific, return it unchanged
+- Focus on the desired end state, not the means to achieve it
+
+Return only the refined statement, nothing else.`
+      };
+
+      const userMessage: ChatMessage = {
+        role: 'user',
+        content: `Please refine this outcome statement: "${outcomeStatement}"`
+      };
+
+      const response = await AIService.chat([refinementPrompt, userMessage]);
+      return response.message.trim();
+    } catch (error) {
+      console.error('Outcome refinement error:', error);
+      return outcomeStatement; // Return original if refinement fails
     }
   }
 }

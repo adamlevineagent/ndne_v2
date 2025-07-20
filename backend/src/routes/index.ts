@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authRoutes from './auth';
 import conversationRoutes from './conversations';
+import outcomeRoutes from './outcomes';
 
 const router = Router();
 
@@ -9,6 +10,9 @@ router.use('/auth', authRoutes);
 
 // Mount conversation routes
 router.use('/conversations', conversationRoutes);
+
+// Mount outcome routes
+router.use('/outcomes', outcomeRoutes);
 
 // Health check for API
 router.get('/health', (req, res) => {

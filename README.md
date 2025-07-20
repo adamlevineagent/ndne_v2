@@ -7,7 +7,8 @@ A revolutionary collective intelligence platform that enables outcome-oriented d
 ✅ **Foundation Complete** - Project structure, database schema, and development environment setup  
 ✅ **Authentication System Complete** - Full user registration, login, JWT tokens, and protected routes  
 ✅ **Home Mind Conversation Interface Complete** - AI-powered chat system with OpenRouter integration  
-🚧 **Next: Outcome Collection System** - Forms and storage for user desired outcomes
+✅ **Outcome Collection System Complete** - Full CRUD operations, AI extraction, and refinement capabilities  
+🚧 **Next: AI-Powered Proposal Generation** - System to match outcomes and generate solutions
 
 ## Project Structure
 
@@ -173,8 +174,30 @@ See `backend/.env.example` for required environment variables:
   - Headers: `Authorization: Bearer <token>`
   - Returns: `{ message: "Conversation deleted successfully" }`
 
+### Outcomes ✅ Complete
+- `GET /api/outcomes/:userId` - Get all outcomes for authenticated user
+  - Headers: `Authorization: Bearer <token>`
+  - Returns: `{ outcomes: [{ id, statement, importance, extractedFromConversation, refinementHistory, createdAt, updatedAt }] }`
+- `POST /api/outcomes` - Create new outcome
+  - Headers: `Authorization: Bearer <token>`
+  - Requires: `{ statement: string, importance: number }` (importance 1-5)
+  - Returns: `{ outcome: { id, statement, importance, ... } }`
+- `PUT /api/outcomes/:id` - Update existing outcome
+  - Headers: `Authorization: Bearer <token>`
+  - Requires: `{ statement?: string, importance?: number }`
+  - Returns: `{ outcome: { id, statement, importance, ... } }`
+- `DELETE /api/outcomes/:id` - Delete outcome
+  - Headers: `Authorization: Bearer <token>`
+  - Returns: `{ message: "Outcome deleted successfully" }`
+- `POST /api/outcomes/extract` - Extract outcomes from conversation using AI
+  - Headers: `Authorization: Bearer <token>`
+  - Requires: `{ conversationMessages: Array<{role, content}> }`
+  - Returns: `{ outcomes: Array<outcome> }`
+- `POST /api/outcomes/:id/refine` - AI-powered outcome refinement
+  - Headers: `Authorization: Bearer <token>`
+  - Returns: `{ outcome: { id, statement, importance, ... } }`
+
 ### Coming Soon
-- Outcome collection and management
 - AI-powered proposal generation
 - User reaction and feedback system
 
@@ -218,10 +241,10 @@ The platform implements a robust authentication system with the following featur
 
 ## Next Steps
 
-With foundation, authentication, and Home Mind conversation interface complete, the next development phases are:
+With foundation, authentication, Home Mind conversation interface, and outcome collection system complete, the next development phases are:
 
-1. **Outcome Collection System** - Forms and storage for user desired outcomes with importance ratings
-2. **AI-Powered Proposal Generation** - System to match outcomes and generate solutions that address multiple users' needs
-3. **User Reaction System** - Feedback collection and learning from user responses to proposals
-4. **Dashboard and Navigation** - User interface for managing outcomes and viewing proposals
-5. **Enhanced AI Features** - API key management for users who want unlimited AI capabilities
+1. **AI-Powered Proposal Generation** - System to match outcomes and generate solutions that address multiple users' needs
+2. **User Reaction System** - Feedback collection and learning from user responses to proposals
+3. **Dashboard and Navigation** - Enhanced user interface for managing outcomes and viewing proposals
+4. **Enhanced AI Features** - API key management for users who want unlimited AI capabilities
+5. **Privacy and Security Enhancements** - Data export, account deletion, and advanced security measures

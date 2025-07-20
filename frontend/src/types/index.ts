@@ -11,7 +11,17 @@ export interface Outcome {
   userId: string;
   statement: string;
   importance: number; // 1-5 scale
+  extractedFromConversation: boolean;
+  refinementHistory: RefinementEntry[];
   createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface RefinementEntry {
+  timestamp: Date;
+  originalStatement: string;
+  refinedStatement: string;
+  reason: string;
 }
 
 export interface Proposal {

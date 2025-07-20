@@ -146,4 +146,32 @@ export const proposalService = {
   },
 };
 
+// Reaction service
+export const reactionService = {
+  createOrUpdateReaction: async (proposalId: string, response: 'like' | 'dislike', comment?: string): Promise<any> => {
+    const apiResponse = await api.post('/reactions', { proposalId, response, comment });
+    return apiResponse.data.data; // Backend returns { success: true, data: reaction }
+  },
+
+  getReactionsByProposal: async (proposalId: string): Promise<{ reactions: any[]; stats: any }> => {
+    const apiResponse = await api.get(`/reactions/${proposalId}`);
+    return apiResponse.data.data; // Backend returns { success: true, data: { reactions, stats } }
+  },
+
+  getUserReaction: async (proposalId: string): Promise<any> => {
+    const apiResponse = await api.get(`/reactions/${proposalId}/user`);
+    return apiResponse.data.data; // Backend returns { success: true, data: reaction }
+  },
+
+  deleteReaction: async (proposalId: string): Promise<{ message: string }> => {
+    const apiResponse = await api.delete(`/reactions/${proposalId}`);
+    return apiResponse.data; // Backend returns { success: true, message: string }
+  },
+
+  getUserReactions: async (): Promise<any[]> => {
+    const apiResponse = await api.get('/reactions/user/all');
+    return apiResponse.data.data; // Backend returns { success: true, data: reactions[] }
+  },
+};
+
 export default api;

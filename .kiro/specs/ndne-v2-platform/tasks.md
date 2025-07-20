@@ -52,11 +52,15 @@
   - Implement proposal fetching from API in frontend
   - _Requirements: 5.1_
 
-- [ ] 6.3 Implement reaction capture interface
+- [x] 6.3 Implement reaction capture interface
   - Add like/dislike buttons to ProposalCard component
   - Create reaction form with optional comment field
   - Integrate reaction submission with backend API
   - Show user's existing reactions and allow updates
+  - Display reaction statistics (likes, dislikes, percentages)
+  - Implement reaction update and deletion functionality
+  - Add comprehensive error handling and loading states
+  - Include responsive design for mobile compatibility
   - _Requirements: 5.2, 5.3_
 
 - [ ] 6.4 Show outcome-proposal connections

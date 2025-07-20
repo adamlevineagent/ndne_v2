@@ -30,19 +30,41 @@
   - Add importance rating (1-5 scale) functionality
   - _Requirements: 2.1, 2.4_
 
-- [ ] 5. Create AI-powered proposal generation system
+- [x] 5. Create AI-powered proposal generation system
   - Implement AI-based outcome similarity analysis using semantic understanding
   - Create intelligent proposal generation that synthesizes similar outcomes from multiple users
   - Build proposal API endpoints (POST /api/proposals/generate, GET /api/proposals)
   - Link proposals to contributing users via proposal_users table
   - _Requirements: 3.1, 3.2, 3.4_
 
-- [ ] 6. Build proposal viewing and reaction system
-  - Create proposal display UI with clear explanations
-  - Implement reaction capture (like/dislike with optional comments)
-  - Create reaction API endpoints (POST /api/reactions, GET /api/reactions/:proposalId)
-  - Show how proposals address user's specific outcomes
-  - _Requirements: 5.1, 5.2, 5.3_
+- [x] 6. Build proposal viewing and reaction system
+- [x] 6.1 Create reaction API endpoints and service
+  - Implement POST /api/reactions endpoint for capturing user reactions
+  - Implement GET /api/reactions/:proposalId endpoint for fetching proposal reactions
+  - Create ReactionService class with database operations
+  - Add reaction routes to main router
+  - _Requirements: 5.2, 5.3_
+
+- [x] 6.2 Create proposal viewing UI components
+  - Build ProposalCard component to display individual proposals
+  - Create ProposalList component to show all available proposals
+  - Add ProposalsPage to main navigation and routing
+  - Implement proposal fetching from API in frontend
+  - _Requirements: 5.1_
+
+- [ ] 6.3 Implement reaction capture interface
+  - Add like/dislike buttons to ProposalCard component
+  - Create reaction form with optional comment field
+  - Integrate reaction submission with backend API
+  - Show user's existing reactions and allow updates
+  - _Requirements: 5.2, 5.3_
+
+- [ ] 6.4 Show outcome-proposal connections
+  - Display how each proposal addresses user's specific outcomes
+  - Show similarity analysis and shared themes in proposal view
+  - Highlight which of user's outcomes are addressed by each proposal
+  - Add explanatory text for proposal benefits to user
+  - _Requirements: 5.1, 5.4_
 
 - [ ] 7. Implement AI-powered learning and outcome distillation
   - Create AI system that continuously distills and refines understanding of user outcomes from reactions

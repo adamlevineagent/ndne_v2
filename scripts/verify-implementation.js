@@ -1,32 +1,47 @@
 #!/usr/bin/env node
 
 /**
- * Simple verification script to check if the implementation is working
- * This script verifies that all the required files exist and have the expected structure
+ * Verification script to check NDNE V2 Platform implementation status
+ * This script verifies that all required files exist and core functionality is implemented
  */
 
 const fs = require('fs');
 const path = require('path');
 
-console.log('🔍 Verifying NDNE V2 Implementation...\n');
+console.log('🔍 Verifying NDNE V2 Platform Implementation...\n');
 
 // Check backend files
 const backendFiles = [
   'backend/src/services/ai.ts',
+  'backend/src/services/auth.ts',
   'backend/src/services/conversation.ts',
-  'backend/src/routes/conversations.ts',
-  'backend/src/routes/index.ts',
+  'backend/src/services/outcome.ts',
+  'backend/src/services/proposal.ts',
+  'backend/src/services/reaction.ts',
   'backend/src/routes/auth.ts',
+  'backend/src/routes/conversations.ts',
+  'backend/src/routes/outcomes.ts',
+  'backend/src/routes/proposals.ts',
+  'backend/src/routes/reactions.ts',
+  'backend/src/routes/index.ts',
   'backend/src/middleware/auth.ts',
   'backend/src/config/database.ts',
-  'backend/migrations/1640995200000_create-initial-schema.js'
+  'backend/src/index.ts',
+  'backend/migrations/001_initial_schema.sql',
+  'backend/migrations/002_create_outcomes_table.sql'
 ];
 
 // Check frontend files
 const frontendFiles = [
   'frontend/src/components/AuthForm.tsx',
   'frontend/src/components/Chat.tsx',
+  'frontend/src/components/OutcomeForm.tsx',
+  'frontend/src/components/OutcomeList.tsx',
+  'frontend/src/components/ProposalCard.tsx',
+  'frontend/src/components/ProposalList.tsx',
   'frontend/src/pages/HomePage.tsx',
+  'frontend/src/pages/OutcomesPage.tsx',
+  'frontend/src/pages/ProposalsPage.tsx',
   'frontend/src/services/api.ts',
   'frontend/src/types/index.ts',
   'frontend/src/App.tsx',

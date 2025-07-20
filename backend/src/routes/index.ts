@@ -3,6 +3,7 @@ import authRoutes from './auth';
 import conversationRoutes from './conversations';
 import outcomeRoutes from './outcomes';
 import proposalRoutes from './proposals';
+import reactionRoutes from './reactions';
 
 const router = Router();
 
@@ -17,6 +18,9 @@ router.use('/outcomes', outcomeRoutes);
 
 // Mount proposal routes
 router.use('/proposals', proposalRoutes);
+
+// Mount reaction routes
+router.use('/reactions', reactionRoutes);
 
 // Health check for API
 router.get('/health', (req, res) => {

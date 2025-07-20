@@ -843,3 +843,245 @@ utcomes Page Styles */
     min-width: auto;
   }
 }
+/* Pr
+oposals Page Styles */
+.proposals-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Proposal List Styles */
+.proposal-list.empty {
+  text-align: center;
+  padding: 3rem;
+}
+
+.proposal-list.loading {
+  text-align: center;
+  padding: 3rem;
+}
+
+.empty-state {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.empty-state h3 {
+  color: #1a1a2e;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.proposal-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.proposal-list-header h3 {
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.proposals {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Proposal Card Styles */
+.proposal-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.proposal-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.proposal-header {
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.proposal-title {
+  color: #1a1a2e;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.proposal-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.proposal-date {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.proposal-content {
+  padding: 1rem 1.5rem;
+}
+
+.proposal-description {
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.proposal-actions {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Proposal Modal Styles */
+.proposal-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.proposal-modal {
+  background: white;
+  border-radius: 8px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.proposal-modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.proposal-modal-header h2 {
+  color: #1a1a2e;
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.modal-close-btn:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.proposal-modal-content {
+  padding: 1.5rem;
+}
+
+.proposal-modal-content .proposal-meta {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.proposal-full-description h3 {
+  color: #1a1a2e;
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+.proposal-full-description p {
+  color: #333;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.proposal-modal-actions {
+  padding: 1.5rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Responsive Design for Proposals */
+@media (max-width: 768px) {
+  .proposals-page {
+    padding: 1rem;
+  }
+  
+  .proposal-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .proposal-modal {
+    margin: 0.5rem;
+    max-height: calc(100vh - 1rem);
+  }
+  
+  .proposal-modal-header {
+    padding: 1rem;
+  }
+  
+  .proposal-modal-content {
+    padding: 1rem;
+  }
+  
+  .proposal-modal-actions {
+    padding: 1rem;
+    flex-direction: column;
+  }
+  
+  .proposal-card {
+    margin: 0 -0.5rem;
+  }
+  
+  .proposal-actions {
+    justify-content: flex-start;
+  }
+}

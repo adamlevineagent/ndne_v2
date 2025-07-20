@@ -124,4 +124,26 @@ export const outcomeService = {
   },
 };
 
+// Proposal service
+export const proposalService = {
+  getProposals: async (): Promise<{ proposals: any[] }> => {
+    const response = await api.get('/proposals');
+    return response.data.data; // Backend returns { success: true, data: { proposals: [...] } }
+  },
+
+  getProposal: async (id: string): Promise<{ proposal: any }> => {
+    const response = await api.get(`/proposals/${id}`);
+    return response.data.data; // Backend returns { success: true, data: { proposal: {...} } }
+  },
+
+  generateProposals: async (options?: { 
+    minSimilarityScore?: number; 
+    maxUsers?: number; 
+    focusThemes?: string[] 
+  }): Promise<{ proposals: any[] }> => {
+    const response = await api.post('/proposals/generate', options || {});
+    return response.data.data; // Backend returns { success: true, data: { proposals: [...] } }
+  },
+};
+
 export default api;

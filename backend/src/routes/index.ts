@@ -2,6 +2,7 @@ import { Router } from 'express';
 import authRoutes from './auth';
 import conversationRoutes from './conversations';
 import outcomeRoutes from './outcomes';
+import proposalRoutes from './proposals';
 
 const router = Router();
 
@@ -13,6 +14,9 @@ router.use('/conversations', conversationRoutes);
 
 // Mount outcome routes
 router.use('/outcomes', outcomeRoutes);
+
+// Mount proposal routes
+router.use('/proposals', proposalRoutes);
 
 // Health check for API
 router.get('/health', (req, res) => {
